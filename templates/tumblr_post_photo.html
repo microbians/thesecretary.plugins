@@ -1,0 +1,31 @@
+<?php
+	/* 
+		TEMPLATE - Call from readTumblr function 
+		$post['tumblr.site'] 		- Tumblr site domain (ej. microbians.tumblr.com)
+		$post['tumblr.tumblrid'] 	- ID of the post that tumblr uses
+		$post['tumblr.date'] 		- Unix date of the post
+		$post['tumblr.type'] 		- Type of post... photo, quote, text, link,...
+		$post['tumblr.url'] 		- Url link to the post in tumblr
+		$post['tumblr.slug'] 		- Slug name for the post tumblr uses
+		$post['tumblr.data1'] 		- Data1 of post, it depends on type of post can be title or link or...
+		$post['tumblr.data2'] 		- Data2 of post, it depends on type of post can be title or link or...
+		$post['tumblr.data3'] 		- Data3 of post, it depends on type of post can be title or link or...
+		
+		FOTO
+		
+		$tmp_data1 	= $post['photo-url-500'];
+		$tmp_data2 	= $post['photo-caption'];
+		
+	*/
+	$prelink='';
+	$poslink='';
+	
+	if ($post['tumblr.data3']!='') {
+		$prelink='<a class="imglink" href="'.$post['tumblr.data3'].'" target="_blank">';
+		$poslink='</a>';
+	}
+	
+	$textclean=html_entity_decode($post['tumblr.data2'],ENT_QUOTES, 'UTF-8');
+?>
+<?php echo $prelink;?><img <?php if ($prelink!='') {echo 'class="imglink"';}?> src="<?php echo $post['tumblr.data1'];?>"/><?php echo $poslink;?><br/>
+<div class="tumblr_text"><?php echo $textclean;?></div>

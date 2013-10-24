@@ -1,0 +1,57 @@
+<?php
+	/* 
+		TEMPLATE - Call from readTumblr function 
+		$post['tumblr.site'] 		- Tumblr site domain (ej. microbians.tumblr.com)
+		$post['tumblr.tumblrid'] 	- ID of the post that tumblr uses
+		$post['tumblr.date'] 		- Unix date of the post
+		$post['tumblr.type'] 		- Type of post... photo, quote, text, link,...
+		$post['tumblr.url'] 		- Url link to the post in tumblr
+		$post['tumblr.slug'] 		- Slug name for the post tumblr uses
+		$post['tumblr.data1'] 		- Data1 of post, it depends on type of post can be title or link or...
+		$post['tumblr.data2'] 		- Data2 of post, it depends on type of post can be title or link or...
+		$post['tumblr.data3'] 		- Data3 of post, it depends on type of post can be title or link or...
+		
+		VIDEO
+		
+		$tmp_data1	=	$post['video-caption'];
+		$tmp_data2	=	$post['video-source'];
+		$tmp_data3	=	$post['video-player'];
+		
+	*/
+?>
+<?php
+
+$videocode=$post['tumblr.data2'];
+
+if (strrpos($videocode,'vimeo')!=false) {
+	if (strrpos($videocode,'iframe')!=false) {
+		$videocode=html_entity_decode($videocode,ENT_QUOTES, 'UTF-8');
+		preg_match('/src="([^"]*)"/i',$videocode,$matches);
+		$videocode=$matches[1];
+	}
+	$videocode=str_replace( 'http://vimeo.com/'			, '', $videocode );
+	$videocode=str_replace( 'http://player.vimeo.com/'	, '', $videocode );
+	echo <<<HTML
+	<iframe type="text/html" width="500" height="281" src="http://player.vimeo.com/$videocode?portrait=0&amp;color=0093e8" frameborder="0"></iframe>
+HTML;
+}
+if (strrpos($videocode,'youtube')!=false) {
+	if (strrpos($videocode,'embed')!=false) {
+		$videocode=html_entity_decode($videocode,ENT_QUOTES, 'UTF-8');
+		preg_match('/src="([^"]*)"/i',$videocode,$matches);
+		$videocode=$matches[1];
+	}
+	if (strrpos($videocode,'watch')!=false) {
+		$videocode=str_replace( 'http://www.youtube.com/watch?v=', '', $videocode );
+	}
+	if (strrpos($videocode,'?')!=false) {
+		$videocode=str_replace( 'http://www.youtube.com/v/', '', $videocode );
+		$videocode=str_replace( '?fs=1', '', $videocode );
+	}
+	
+	echo <<<HTML
+	<iframe type="text/html" width="500" height="281" src="http://www.youtube.com/embed/$videocode" frameborder="0"></iframe>
+HTML;
+}
+?>
+<span class="tumblr_text"><?php echo html_entity_decode($post['tumblr.data1'],ENT_QUOTES, 'UTF-8');?></span>
